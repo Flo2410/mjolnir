@@ -45,4 +45,9 @@ elif [ "$1" = "stop" ]; then
   stop
 elif [ "$1" = "reset" ]; then
   reset
+elif [ "$1" = "" ]; then
+  if [ $( docker ps -f name=mjolnir | wc -l ) -lt 2 ]; then
+    run
+  fi
+  exec_into
 fi
