@@ -18,7 +18,7 @@ RUN mkdir /tools && mkdir /utils && mkdir -m 0700 -p ~/.ssh
 RUN apt install -y python3 python3-pip 
 
 # general tools
-RUN apt install -y git wget curl btop htop nano openssh-client zip unzip libimage-exiftool-perl file binwalk
+RUN apt install -y git wget curl btop htop nano openssh-client zip unzip file binwalk gdb
 
 # build tools
 RUN apt install -y build-essential gcc make openjdk-18-jdk
@@ -27,18 +27,19 @@ RUN apt install -y build-essential gcc make openjdk-18-jdk
 RUN apt install -y dnsutils net-tools iputils-ping traceroute nmap netdiscover netcat
 
 # libs
-RUN apt install -y libcurl4-openssl-dev libssl-dev
+RUN apt install -y libcurl4-openssl-dev libssl-dev libimage-exiftool-perl
 
 # Download public key for github.com
 # ssh-keyscan -T 10 github.com >> ~/.ssh/known_hosts
 COPY home/known_hosts /root/.ssh/
 
 # setup zsh
-RUN apt install -y zsh && chsh -s $(which zsh)
+# RUN apt install -y zsh && chsh -s $(which zsh)
 
 # setup dotfiles
-RUN --mount=type=ssh,required=true git clone git@github.com:Flo2410/dotfiles.git ~/dotfiles && \
-    zsh ~/dotfiles/zsh/install-zsh.sh 
+RUN --mount=type=ssh,required=true,mode=0666 git clone git@github.com:Flo2410/dotfiles.git --recurse-submodules ~/dotfiles && \
+    cd ~/dotfiles && \
+    sh ./install
 COPY home/.zshrc /root/.zshrc
 
 # Node

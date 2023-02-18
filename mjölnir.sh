@@ -1,20 +1,22 @@
 #!/bin/zsh
 
 build() {
-  export DOCKER_BUILDKIT=1 && docker build --ssh default=$(echo $SSH_AUTH_SOCK) -t mjolnir:latest /Users/florian/Syncthing/Programmieren/reverse-engineering/Mjölnir/
+  eval $(ssh-agent) && \
+  ssh-add ~/.ssh/GitHub && \
+  export DOCKER_BUILDKIT=1 && docker build --ssh default=$(echo $SSH_AUTH_SOCK) -t mjolnir:latest /home/florian/syncthing/Development/reverse-engineering/Mjölnir/
 }
 
 run() {
 # -v $HOME/.ssh:/root/.ssh \
  docker run --rm -d -i \
     -v $PWD:/pwd --cap-add=SYS_PTRACE \
-    -v /Users/florian/Syncthing/Programmieren/reverse-engineering/Mjölnir/home/.zsh_history:/root/.zsh_history \
+    -v /home/florian/syncthing/Development/reverse-engineering/Mjölnir/home/.zsh_history:/root/.zsh_history \
     --security-opt \
     seccomp=unconfined \
-    --network host \
-    --name mjolnir \
-    --hostname mjolnir \
-    -i mjolnir:latest
+    --network=host \
+    --name=mjolnir \
+    --hostname=mjolnir \
+    mjolnir:latest
 }
 
 exec_into() {
