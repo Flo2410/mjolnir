@@ -18,7 +18,7 @@ RUN mkdir /tools && mkdir /utils && mkdir -m 0700 -p ~/.ssh
 RUN apt install -y python3 python3-pip 
 
 # general tools
-RUN apt install -y git wget curl btop htop nano openssh-client zip unzip file binwalk gdb
+RUN apt install -y git wget curl btop htop nano openssh-client zip unzip file binwalk gdb sudo
 
 # build tools
 RUN apt install -y build-essential gcc make openjdk-18-jdk
@@ -43,8 +43,8 @@ ARG CACHEBUST=1
 # setup dotfiles
 RUN --mount=type=ssh,required=true,mode=0666 git clone git@github.com:Flo2410/dotfiles.git --recurse-submodules ~/dotfiles && \
     cd ~/dotfiles && \
-    sh ./install
-COPY home/.zshrc /root/.zshrc
+    ./install-profile mjölnir
+# COPY home/.zshrc /root/.zshrcc
 
 # Node
 RUN curl -L https://bit.ly/n-install | N_PREFIX=/utils/n bash -s -- -y latest 
