@@ -36,6 +36,10 @@ COPY home/known_hosts /root/.ssh/
 # setup zsh
 # RUN apt install -y zsh && chsh -s $(which zsh)
 
+
+# this is needed to bust the cache an re-download the dotfiles
+ARG CACHEBUST=1
+
 # setup dotfiles
 RUN --mount=type=ssh,required=true,mode=0666 git clone git@github.com:Flo2410/dotfiles.git --recurse-submodules ~/dotfiles && \
     cd ~/dotfiles && \
